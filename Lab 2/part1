@@ -1,0 +1,36 @@
+#lab 2 part 1
+#Arithmetic
+#Sean Wright
+
+
+.data
+
+ 
+ 
+ z: .word 0
+ 
+ 
+ .text
+ 
+ main:
+ 
+  li x12, 15 #A
+  li x13, 10 #B
+  li x14, 5 #C
+  li x15, 2 #D
+  li x16, 18 #E
+  li x17, -3 #F
+  li x28, 0 # Z
+  
+  
+  sub t0, x12, x13 #a-b
+  mul t1,x14,x15 # c*d
+  sub t2,x16,x17 #e-f
+  div t3,x12,x14 #a/c
+  add t4, t0, t1 # adds t0 + t1 to t4
+  add t5, t4, t2 # adds t4 + t2 to t5
+  sub t6, t5, t3 # sub t5 - t3 to t6
+  
+  sw t6,z,t0 # store word 
+  #sw x7,t6
+  
