@@ -1,4 +1,7 @@
-# Lab 2 Part 5 - Function Call
+# Lab 2 Part 5 
+#Sean Wright
+#ECEGR 2220
+#4/30/2018
 
 	.data
 
