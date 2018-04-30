@@ -1,18 +1,27 @@
  #Lab 2 Part 2
 #Mahaed Mohamud & Sean Wright
 #ECEGR 2220 
-#4/
+#4/30/2018
 
 	.data	# Data declaration section
-	
+A:	.word 10
+B:	.word 15
+C:	.word 15
+Z:	.word 0
 
 	.text #Readable only section include executable code
 main:
-
-	li x1, 10  #A
-	li x2, 15  #B
-	li x3, 6   #C
-	li x4, 0   #z
+	la x1, A
+	#li x1, 10  #A
+	
+	la x2,B
+	#li x2, 15  #B
+	
+	la x3, C
+	#li x3, 6   #C
+	
+	la x4,Z
+	#li x4, 0   #z
 	
 	addi x5, x3, 1 #add c + 1 for the second conditional statement in the second  else if statement
 	addi x6, x0, 7 #assigning  7 to x6 register in order to be incorporated in the second conditional statement in else if statement
