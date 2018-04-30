@@ -1,7 +1,7 @@
  #Lab 2 Part 4
 #Mahaed Mohamud & Sean Wright
 #ECEGR 2220 
-#4/
+#4/30/2018
 
     .data   # Data declaration section
 
