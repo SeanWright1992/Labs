@@ -100,7 +100,7 @@ architecture remember of Registers is
 	end component;
 	
     -- Add your code here for the Register Bank implementation
-signal s_zero, s_one, s_two, s_three, s_four, s_five, s_six, s_seven:std_logic_vector(31 downto 0);
+signal a_zero, a_one, a_two, a_three, a_four, a_five, a_six, a_seven:std_logic_vector(31 downto 0);
 signal writeout: std_logic_vector(7 downto 0);
 	
 begin
@@ -109,14 +109,14 @@ begin
 	with WriteCmd & WriteReg select
 
 			writeout <=
-				"00000001" when "110000",
-				"00000010" when "110001",
-				"00000100" when "110010",
-				"00001000" when "110011",
-				"00010000" when "110100",
-				"00100000" when "110101",
-				"01000000" when "110110",
-				"10000000" when "110111",
+				"00000001" when "101010",
+				"00000010" when "101011",
+				"00000100" when "101100",
+				"00001000" when "101101",
+				"00010000" when "101110",
+				"00100000" when "101111",
+				"01000000" when "110000",
+				"10000000" when "110001",
 				"00000000" when others;
 
 -- Note:
@@ -125,53 +125,45 @@ begin
 
 
 -- NOTE:
---
--- s0 is a0
--- s1 is a1
--- s2 is a2
--- s3 is a3
--- s4 is a4
--- s5 is a5
--- s6 is a6
--- s7 is a7
+
 -- Just associating each generate port map statement label correspond to each register highlighted in the lab 5 instruction document in order to avoid confusion and make the code to be readable. 
 --
 --
 
 ------------------------        DataIn     OE32 OE16 OE8  WE32        WE16  WE8  DataOut
-	S0: register32 port map(WriteData, '0', '1', '1', writeout(0), '0', '0', s_zero); 
-	S1: register32 port map(WriteData, '0', '1', '1', writeout(1), '0', '0', s_one); 
-	S2: register32 port map(WriteData, '0', '1', '1', writeout(2), '0', '0', s_two); 
-	S3: register32 port map(WriteData, '0', '1', '1', writeout(3), '0', '0', s_three); 
-	S4: register32 port map(WriteData, '0', '1', '1', writeout(4), '0', '0', s_four); 
-	S5: register32 port map(WriteData, '0', '1', '1', writeout(5), '0', '0', s_five);
-	S6: register32 port map(WriteData, '0', '1', '1', writeout(6), '0', '0', s_six); 
-	S7: register32 port map(WriteData, '0', '1', '1', writeout(7), '0', '0', s_seven); 
+	S0: register32 port map(WriteData, '0', '1', '1', writeout(0), '0', '0', a_zero); 
+	S1: register32 port map(WriteData, '0', '1', '1', writeout(1), '0', '0', a_one); 
+	S2: register32 port map(WriteData, '0', '1', '1', writeout(2), '0', '0', a_two); 
+	S3: register32 port map(WriteData, '0', '1', '1', writeout(3), '0', '0', a_three); 
+	S4: register32 port map(WriteData, '0', '1', '1', writeout(4), '0', '0', a_four); 
+	S5: register32 port map(WriteData, '0', '1', '1', writeout(5), '0', '0', a_five);
+	S6: register32 port map(WriteData, '0', '1', '1', writeout(6), '0', '0', a_six); 
+	S7: register32 port map(WriteData, '0', '1', '1', writeout(7), '0', '0', a_seven); 
 
 	
 
 	with ReadReg1 select
 		ReadData1<= 	X"00000000" when "00000",
-				s_zero when "10000",
-				s_one when "10001",
-				s_two when "10010",
-				s_three when "10011",
-				s_four when "10100",
-				s_five when "10101",
-				s_six when "10110",
-				s_seven when "10111",
+				a_zero when "01010",
+				a_one when "01011",
+				a_two when "01100",
+				a_three when "01101",
+				a_four when "01110",
+				a_five when "01111",
+				a_six when "10000",
+				a_seven when "10001",
 				X"00000000" when others;
 
 	with ReadReg2 select
 		ReadData2<= 	X"00000000" when "00000",
-				s_zero when "10000",
-				s_one when "10001",
-				s_two when "10010",
-				s_three when "10011",
-				s_four when "10100",
-				s_five when "10101",
-				s_six when "10110",
-				s_seven when "10111",
+				a_zero when "01010",
+				a_one when "01011",
+				a_two when "01100",
+				a_three when "01101",
+				a_four when "01110",
+				a_five when "01111",
+				a_six when "10000",
+				a_seven when "10001",
 				X"00000000" when others;
 
 end remember;
