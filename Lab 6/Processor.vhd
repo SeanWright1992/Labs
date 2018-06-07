@@ -1,0 +1,196 @@
+--------------------------------------------------------------------------------
+--
+-- LAB #6 - Processor 
+--
+--------------------------------------------------------------------------------
+-- Mahaed Mohamud & Sean Wright
+-- ECEGR 2220 - Microprocessor
+-- Lab #6
+--
+-- Main Objectives: 1.  Create a VHDL program that properly implements the RISC-V single cycle processor design as seen in the lab 6 instructions.
+-- 2. Also building upon the components that it was created in previous labs (Lab #3, Lab #4, and Lab #5).
+-- 3. Create a VHDL program that supports the following instructions set that is seen in the lab 6 instructions.
+-- 
+--
+-- 
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity Processor is
+    Port ( reset : in  std_logic;
+	   clock : in  std_logic);
+end Processor;
+
+architecture holistic of Processor is
+	component Control
+   	     Port( clk : in  STD_LOGIC;
+               opcode : in  STD_LOGIC_VECTOR (6 downto 0);
+               funct3  : in  STD_LOGIC_VECTOR (2 downto 0);
+               funct7  : in  STD_LOGIC_VECTOR (6 downto 0);
+               Branch : out  STD_LOGIC_VECTOR(1 downto 0);
+               MemRead : out  STD_LOGIC;
+               MemtoReg : out  STD_LOGIC;
+               ALUCtrl : out  STD_LOGIC_VECTOR(4 downto 0);
+               MemWrite : out  STD_LOGIC;
+               ALUSrc : out  STD_LOGIC;
+               RegWrite : out  STD_LOGIC;
+               ImmGen : out STD_LOGIC_VECTOR(1 downto 0));
+	end component;
+
+	component ALU
+		Port(DataIn1: in std_logic_vector(31 downto 0);
+		     DataIn2: in std_logic_vector(31 downto 0);
+		     ALUCtrl: in std_logic_vector(4 downto 0);
+		     Zero: out std_logic;
+		     ALUResult: out std_logic_vector(31 downto 0) );
+	end component;
+	
+	component Registers
+	    Port(ReadReg1: in std_logic_vector(4 downto 0); 
+                 ReadReg2: in std_logic_vector(4 downto 0); 
+                 WriteReg: in std_logic_vector(4 downto 0);
+		 WriteData: in std_logic_vector(31 downto 0);
+		 WriteCmd: in std_logic;
+		 ReadData1: out std_logic_vector(31 downto 0);
+		 ReadData2: out std_logic_vector(31 downto 0));
+	end component;
+
+	component InstructionRAM
+    	    Port(Reset:	  in std_logic;
+		 Clock:	  in std_logic;
+		 Address: in std_logic_vector(29 downto 0);
+		 DataOut: out std_logic_vector(31 downto 0));
+	end component;
+
+	component RAM 
+	    Port(Reset:	  in std_logic;
+		 Clock:	  in std_logic;	 
+		 OE:      in std_logic;
+		 WE:      in std_logic;
+		 Address: in std_logic_vector(29 downto 0);
+		 DataIn:  in std_logic_vector(31 downto 0);
+		 DataOut: out std_logic_vector(31 downto 0));
+	end component;
+	
+	component BusMux2to1
+		Port(selector: in std_logic;
+		     In0, In1: in std_logic_vector(31 downto 0);
+		     Result: out std_logic_vector(31 downto 0) );
+	end component;
+	
+	component ProgramCounter
+	    Port(Reset: in std_logic;
+		 Clock: in std_logic;
+		 PCin: in std_logic_vector(31 downto 0);
+		 PCout: out std_logic_vector(31 downto 0));
+	end component;
+
+	component adder_subtracter
+		port(	datain_a: in std_logic_vector(31 downto 0);
+			datain_b: in std_logic_vector(31 downto 0);
+			add_sub: in std_logic;
+			dataout: out std_logic_vector(31 downto 0);
+			co: out std_logic);
+	end component adder_subtracter;
+
+
+
+
+
+	-- Add your code here.
+
+	signal read_register_1: std_logic_vector (4 downto 0); 
+	signal read_register_2: std_logic_vector (4 downto 0);
+
+	signal write_register: std_logic_vector(4 downto 0);
+	signal write_data: std_logic_vector (31 downto 0);
+
+	signal read_data_2: std_logic_vector(31 downto 0);
+	signal read_data_1: std_logic_vector (31 downto 0);
+
+	signal RegSrc: std_logic;
+
+	signal opcode: std_logic_vector(5 downto 0);
+	signal funct7: std_logic_vector(7 downto 0);
+
+	signal RegDst:  STD_LOGIC;
+	signal Branch:  STD_LOGIC_VECTOR(1 downto 0);
+
+	signal MemRead: STD_LOGIC;
+	signal MemtoReg: STD_LOGIC;
+
+	signal ALUOp:  STD_LOGIC_VECTOR(4 downto 0);
+	signal MemWrite: STD_LOGIC;
+
+	signal ALUSrc: STD_LOGIC;
+	signal RegWrite: STD_LOGIC;
+
+	signal PCIn: std_logic_vector(31 downto 0);
+	signal PCOut: std_logic_vector(31 downto 0);
+	
+
+	signal imem: std_logic_vector(31 downto 0);
+	signal immediate: std_logic_vector (31 downto 0);
+
+	signal data_in_2: std_logic_vector (31 downto 0);
+	signal zero: std_logic;
+
+	signal ALU_Result: std_logic_vector(31 downto 0); 
+
+	signal read_data_memory: std_logic_vector(31 downto 0); -- Must get to ram
+
+	signal Add_one: std_logic_vector(31 downto 0);
+	signal carry_out: std_logic;	
+
+	signal ALU_branch: std_logic_vector(31 downto 0);
+	signal carry_out_2: std_logic;
+
+	signal shift: std_logic_vector(31 downto 0);
+	
+
+begin
+	-- Add your code here
+	--
+	--
+	--
+	--
+	-- Note: See the below list that contains the tasks that needs to be completed  for this code (for this lab). 
+	--
+	-- The tasks that needs to be completed in here
+	-- porrt for the control and pc counter
+	-- compute the shift, not always needs
+	-- porrt for the control and pc counter
+	-- ports for the ram reading 	
+	-- selects which register is gonna read from and which register is write to 
+	-- load from and read to registers
+	-- data is either the register of imm. value
+	--
+	--
+	--
+
+
+
+
+	--  The New PC Counter. 
+	PCin <=   ALU_branch when zero & Branch = "001" else
+		 ALU_branch when zero & Branch = "110" else
+		 Add_one; 
+
+	--Calculate the immediate value
+	
+
+
+	--op and funct codes
+	opcode <= imem(6 downto 0); 
+	funct7 <= imem(31 downto 25);  
+	
+	--second register
+	read_register_2 <= imem(24 downto 20);
+
+
+end holistic;
+
